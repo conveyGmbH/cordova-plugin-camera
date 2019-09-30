@@ -38,7 +38,7 @@
     self = [super initWithFrame:frame];
     if (self)
     {
-        CGFloat wegVomRand = 24;
+        CGFloat wegVomRand = 72;
 
         self.balkenHoehe = pBarH;
         _griffBreite = 18;

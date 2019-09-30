@@ -190,24 +190,9 @@ static NSString* toBase64(NSData* data) {
         
         // Perform UI operations on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            // If a popover is already open, close it; we only want one at a time.
-            if (([[weakSelf pickerController] pickerPopoverController] != nil) && [[[weakSelf pickerController] pickerPopoverController] isPopoverVisible]) {
-                [[[weakSelf pickerController] pickerPopoverController] dismissPopoverAnimated:YES];
-                [[[weakSelf pickerController] pickerPopoverController] setDelegate:nil];
-                [[weakSelf pickerController] setPickerPopoverController:nil];
-            }
-
-            if ([weakSelf popoverSupported] && (pictureOptions.sourceType != UIImagePickerControllerSourceTypeCamera)) {
-                if (cameraPicker.pickerPopoverController == nil) {
-                    cameraPicker.pickerPopoverController = [[NSClassFromString(@"UIPopoverController") alloc] initWithContentViewController:cameraPicker];
-                }
-                [weakSelf displayPopover:pictureOptions.popoverOptions];
-                weakSelf.hasPendingOperation = NO;
-            } else {
-                [weakSelf.viewController presentViewController:cameraPicker animated:YES completion:^{
-                    weakSelf.hasPendingOperation = NO;
-                }];
-            }
+	    [weakSelf.viewController presentViewController:cameraPicker animated:YES completion:^{
+	        weakSelf.hasPendingOperation = NO;
+	    }];
         });
     }];
 }
@@ -563,6 +548,7 @@ static NSString* toBase64(NSData* data) {
             [cropCtrl setDelegate:weakSelf];
             [cropCtrl setDerImagePicker:picker];
             [cropCtrl setDieBildInfo:info];
+            [cropCtrl setModalPresentationStyle:UIModalPresentationOverFullScreen];
             [weakSelf.viewController presentViewController:cropCtrl animated:YES completion:NULL];
         }
     };
@@ -806,10 +792,10 @@ static NSString* toBase64(NSData* data) {
 {
     [super viewDidAppear:animated];
     
-    // create an overlay-view – if needed
+    // create an overlay-view if needed
     if (!self.showsCameraControls) {
         CDVCamera *camera = (CDVCamera *)self.delegate;
-        UIView *olv = [[UIView alloc] initWithFrame:self.view.bounds];
+        UIView *olv = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         
         [olv setOpaque:NO];
         [olv setBackgroundColor:[UIColor clearColor]];
