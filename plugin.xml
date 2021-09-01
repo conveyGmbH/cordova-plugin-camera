@@ -106,9 +106,8 @@
         <source-file src="src/android/GalleryPathVO.java" target-dir="src/org/apache/cordova/camera" />
         <source-file src="src/android/xml/camera_provider_paths.xml" target-dir="res/xml" />
 
-        <preference name="ANDROIDX_CORE_VERSION" default="1.6.+"/>
-        <framework src="androidx.core:core:$ANDROIDX_CORE_VERSION" />
-
+        <framework src="src/android/camera.gradle" custom="true" type="gradleReference"/>
+        <resource-file src="src/android/core-1.6.0.aar" target="libs/core.aar"/>
         <js-module src="www/CameraPopoverHandle.js" name="CameraPopoverHandle">
             <clobbers target="CameraPopoverHandle" />
         </js-module>
