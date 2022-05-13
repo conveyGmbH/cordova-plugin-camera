@@ -121,6 +121,9 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private boolean correctOrientation;     // Should the pictures orientation be corrected
     private boolean orientationCorrected;   // Has the picture's orientation been corrected
     private boolean allowEdit;              // Should we allow the user to crop the image.
+    private boolean useFrontCamera;         // Should we use front camera.
+    //private int popoverOptions;           // not used yet
+	private int cameraDirection;            // Camery direction BACK:0 FRONT:1
 
     protected final static String[] permissions = { Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
@@ -160,11 +163,13 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             this.encodingType = JPEG;
             this.mediaType = PICTURE;
             this.mQuality = 50;
+			this.cameraDirection = 0;
+			this.useFrontCamera = false;
 
             //Take the values from the arguments if they're not already defined (this is tricky)
+            this.mQuality = args.getInt(0);
             this.destType = args.getInt(1);
             this.srcType = args.getInt(2);
-            this.mQuality = args.getInt(0);
             this.targetWidth = args.getInt(3);
             this.targetHeight = args.getInt(4);
             this.encodingType = args.getInt(5);
@@ -172,6 +177,13 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             this.allowEdit = args.getBoolean(7);
             this.correctOrientation = args.getBoolean(8);
             this.saveToPhotoAlbum = args.getBoolean(9);
+            //this.popoverOptions = args.getInt(10);
+            this.cameraDirection = args.getInt(11);
+			if (this.cameraDirection == 1) {
+			    this.useFrontCamera = true;
+			} else {
+				this.cameraDirection = 0;
+			}
 
             // If the user specifies a 0 or smaller width/height
             // make it -1 so later comparisons succeed
@@ -314,6 +326,26 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 		LOG.d(LOG_TAG, "Taking a picture and saving to: " + this.imageUri.toString());
 
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, this.imageUri);
+
+        // Extras for displaying the front camera on most devices
+        intent.putExtra("com.google.assistant.extra.USE_FRONT_CAMERA", this.useFrontCamera);
+        intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", this.useFrontCamera);
+        intent.putExtra("android.intent.extras.LENS_FACING_FRONT", this.cameraDirection);
+        intent.putExtra("android.intent.extras.CAMERA_FACING", this.cameraDirection);
+
+		if (this.useFrontCamera) {
+    		// Samsung devices
+			intent.putExtra("camerafacing", "front");
+			intent.putExtra("previous_mode", "front");
+			// Huawei & Honor devices
+			intent.putExtra("default_camera", "1");
+		} else {
+			intent.putExtra("camerafacing", "rear");
+			intent.putExtra("previous_mode", "rear");
+			// Huawei & Honor devices
+			intent.putExtra("default_camera", "0");
+		}
+
         //We can write to this URI, this will hopefully allow us to write files to get to the next step
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
