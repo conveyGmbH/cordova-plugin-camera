@@ -50,6 +50,7 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.SecurityException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -1300,7 +1301,12 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 id--;
             }
             Uri uri = Uri.parse(contentStore + "/" + id);
-            this.cordova.getActivity().getContentResolver().delete(uri, null, null);
+			// @hung 21.07.2022 workaround 
+		    try {
+				this.cordova.getActivity().getContentResolver().delete(uri, null, null);
+            } catch (SecurityException e) {
+                LOG.d(LOG_TAG, "Swallowed error, probably caused by missing permissions, while trying to delete duplicate image.");
+            }
             cursor.close();
         }
     }
