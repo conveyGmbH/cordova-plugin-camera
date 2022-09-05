@@ -1361,7 +1361,12 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 id--;
             }
             Uri uri = Uri.parse(contentStore + "/" + id);
+			// @hung 21.07.2022 workaround 
+		    try {
             this.cordova.getActivity().getContentResolver().delete(uri, null, null);
+            } catch (SecurityException e) {
+                LOG.d(LOG_TAG, "Swallowed error, probably caused by missing permissions, while trying to delete duplicate image.");
+            }
             cursor.close();
         }
     }
