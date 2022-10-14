@@ -81,7 +81,16 @@
                   android:resource="@xml/provider_paths"/>
           </provider>
         </config-file>
-
+        <config-file target="AndroidManifest.xml" parent="/*" >
+            <queries>
+                <intent>
+					<action android:name="android.media.action.IMAGE_CAPTURE" />
+				</intent>
+				<intent>
+					<action android:name="android.intent.action.GET_CONTENT" />
+				</intent>
+			</queries>
+		</config-file>
         <source-file src="src/android/CameraLauncher.java" target-dir="src/org/apache/cordova/camera" />
         <source-file src="src/android/FileProvider.java" target-dir="src/org/apache/cordova/camera" />
         <source-file src="src/android/FileHelper.java" target-dir="src/org/apache/cordova/camera" />
