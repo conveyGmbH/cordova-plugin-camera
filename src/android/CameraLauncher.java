@@ -313,7 +313,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         } else {
             saveAlbumPermission = true;
         }*/
-        aveAlbumPermission = hasPermissions(storagePermissions);
+        saveAlbumPermission = hasPermissions(storagePermissions);
         boolean takePicturePermission = PermissionHelper.hasPermission(this, Manifest.permission.CAMERA);
 
         // CB-10120: The CAMERA permission does not need to be requested unless it is declared
