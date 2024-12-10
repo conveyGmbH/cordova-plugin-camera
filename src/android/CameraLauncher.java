@@ -1,4 +1,4 @@
-/*
+﻿/*
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
        distributed with this work for additional information
@@ -156,7 +156,9 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         this.callbackContext = callbackContext;
         //Adding an API to CoreAndroid to get the BuildConfigValue
         //This allows us to not make this a breaking change to embedding
-        this.applicationId = (String) BuildHelper.getBuildConfigValue(cordova.getActivity(), "APPLICATION_ID");
+        //this.applicationId = (String) BuildHelper.getBuildConfigValue(cordova.getActivity(), "APPLICATION_ID");
+        //this.applicationId = preferences.getString("applicationId", this.applicationId);
+        this.applicationId = cordova.getContext().getPackageName();
         this.applicationId = preferences.getString("applicationId", this.applicationId);
         this.authority = this.applicationId + ".provider";
 
@@ -363,12 +365,13 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
         // Specify file so that large image is captured and returned
         File photo = createCaptureFile(encodingType, "Photo");
-        this.imageFilePath = photo.getAbsolutePath();
-        this.imageUri = FileProvider.getUriForFile(cordova.getActivity(), this.authority, photo);
-        LOG.d(LOG_TAG, "Taking a picture and saving to: " + this.imageUri.toString());
+        //this.imageFilePath = photo.getAbsolutePath();
+        //this.imageUri = FileProvider.getUriForFile(cordova.getActivity(), this.authority, photo);
+        //LOG.d(LOG_TAG, "Taking a picture and saving to: " + this.imageUri.toString());
 
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, this.imageUri);
-
+        //intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, this.imageUri);
+        this.imageUri = FileProvider.getUriForFile(cordova.getActivity(),applicationId + ".cordova.plugin.camera.provider",photo);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         // Extras for displaying the front camera on most devices
         intent.putExtra("com.google.assistant.extra.USE_FRONT_CAMERA", this.useFrontCamera);
         intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", this.useFrontCamera);
