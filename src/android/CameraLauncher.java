@@ -1,4 +1,4 @@
-﻿/*
+/*
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
        distributed with this work for additional information
@@ -1396,7 +1396,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 id--;
             }
             Uri uri = Uri.parse(contentStore + "/" + id);
-			// @hung 21.07.2022 workaround 
+			// @hung 21.07.2022 workaround
 		    try {
             this.cordova.getActivity().getContentResolver().delete(uri, null, null);
             } catch (SecurityException e) {
