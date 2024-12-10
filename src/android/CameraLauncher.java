@@ -160,7 +160,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         //this.applicationId = preferences.getString("applicationId", this.applicationId);
         this.applicationId = cordova.getContext().getPackageName();
         this.applicationId = preferences.getString("applicationId", this.applicationId);
-        this.authority = this.applicationId + ".provider";
+        this.authority = this.applicationId + ".cordova.plugin.camera.provider";
 
 
         if (action.equals(TAKE_PICTURE_ACTION)) {
@@ -277,16 +277,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     }
 
     private String getTempDirectoryPath() {
-        File cache = null;
-
-        // SD Card Mounted
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            cache = cordova.getActivity().getExternalCacheDir();
-        }
-        // Use internal storage
-        else {
-            cache = cordova.getActivity().getCacheDir();
-        }
+        File cache = cordova.getActivity().getCacheDir();
 
         // Create the cache directory if it doesn't exist
         cache.mkdirs();
@@ -365,12 +356,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
         // Specify file so that large image is captured and returned
         File photo = createCaptureFile(encodingType, "Photo");
-        //this.imageFilePath = photo.getAbsolutePath();
-        //this.imageUri = FileProvider.getUriForFile(cordova.getActivity(), this.authority, photo);
-        //LOG.d(LOG_TAG, "Taking a picture and saving to: " + this.imageUri.toString());
+        this.imageFilePath = photo.getAbsolutePath();
+        this.imageUri = FileProvider.getUriForFile(cordova.getActivity(), this.authority, photo);
+        LOG.d(LOG_TAG, "Taking a picture and saving to: " + this.imageUri.toString());
 
-        //intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, this.imageUri);
-        this.imageUri = FileProvider.getUriForFile(cordova.getActivity(),applicationId + ".cordova.plugin.camera.provider",photo);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         // Extras for displaying the front camera on most devices
         intent.putExtra("com.google.assistant.extra.USE_FRONT_CAMERA", this.useFrontCamera);
