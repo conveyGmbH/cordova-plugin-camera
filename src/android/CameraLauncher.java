@@ -1,4 +1,4 @@
-/*
+﻿/*
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
        distributed with this work for additional information
@@ -246,7 +246,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     //--------------------------------------------------------------------------
 
     private String[] getPermissions(boolean storageOnly, int mediaType) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        /*if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (storageOnly) {
                 switch (mediaType) {
                     case PICTURE:
@@ -273,7 +273,8 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             } else {
                 return new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
             }
-        }
+        }*/
+		return new String[]{Manifest.permission.CAMERA};
     }
 
     private String getTempDirectoryPath() {
